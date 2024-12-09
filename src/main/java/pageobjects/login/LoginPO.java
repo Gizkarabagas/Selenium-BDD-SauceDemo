@@ -2,6 +2,7 @@ package pageobjects.login;
 
 import helpers.AssertionHelper;
 import helpers.GeneralHelper;
+import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
@@ -20,6 +21,10 @@ public class LoginPO {
     WebElement passwordInput;
     @FindBy (id = "login-button")
     WebElement loginButton;
+
+    @FindBy (xpath = "//h3[@data-test='error']")
+    WebElement errorAlert;
+
     public LoginPO(WebDriver driver) {
         PageFactory.initElements(driver, this);
         this.driver = driver;
@@ -46,5 +51,9 @@ public class LoginPO {
     public void verifyLoginSuccessful(){
         hardAssert.assertPageTitle(config.getProperty("inventoryPageTitle"));
         hardAssert.assertCurrentUrl(config.getProperty("inventoryPageUrl"));
+    }
+
+    public void verifyErrorMessage(String errorMessage){
+        hardAssert.assertElementContainsText(errorAlert,errorMessage);
     }
 }
