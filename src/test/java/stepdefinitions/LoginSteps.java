@@ -39,4 +39,9 @@ public class LoginSteps {
     public void userRedirectedToTheInventorypage() {
         loginPage.verifyLoginSuccessful();
     }
+
+    @Then("Error message is displayed with text {string}")
+    public void errorMessageIsDisplayedWithText(String error_message) {
+        loginPage.verifyErrorMessage(error_message);
+    }
 }
