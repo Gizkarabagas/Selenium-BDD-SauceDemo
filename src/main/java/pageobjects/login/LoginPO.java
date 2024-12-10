@@ -10,7 +10,7 @@ import org.openqa.selenium.support.PageFactory;
 import utilities.config.PropertyFileReader;
 
 public class LoginPO {
-    private final AssertionHelper hardAssert;
+    private AssertionHelper hardAssert;
     WebDriver driver;
     GeneralHelper selenium;
     private static final PropertyFileReader config = new PropertyFileReader();

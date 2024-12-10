@@ -2,6 +2,7 @@ package helpers;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.openqa.selenium.By;
 import org.openqa.selenium.NoSuchElementException;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
@@ -65,6 +66,27 @@ public class GeneralHelper {
             logger.error("Failed to click on element: {}. Exception: {}", element, e.getMessage());
             throw e;  // Re-throwing the exception for test-level handling
         }
+    }
+
+    /**
+     * Click on Element
+     *
+     * @param by By object
+     * @throws InterruptedException
+     */
+    public void clickOn(By by)  {
+        waitTillElementIsClickable(by).click();
+    }
+
+    /**
+     * To wait until element is clickable
+     *
+     * @param by By object
+     * @return WebElement object
+     */
+    public WebElement waitTillElementIsClickable(By by) {
+        WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(config.getDefaultWaitDuration()));
+        return wait.until(ExpectedConditions.elementToBeClickable(by));
     }
 
     /**
