@@ -2,12 +2,12 @@ package utilities.pageobjectmanager;
 
 import org.openqa.selenium.WebDriver;
 import pageobjects.login.LoginPO;
-import pageobjects.login.ProductPagePO;
+import pageobjects.Product.ProductPO;
 
 public class PageObjectManager {
     private final WebDriver driver;
     private LoginPO loginPO;
-    private  ProductPagePO productPagePO;
+    private  ProductPO productPagePO;
 
     public PageObjectManager(WebDriver driver) {
         this.driver = driver;
@@ -20,9 +20,9 @@ public class PageObjectManager {
         return loginPO;
     }
 
-    public ProductPagePO getProductPage() {
+    public ProductPO getProductPage() {
         if (productPagePO == null) {
-            productPagePO = new ProductPagePO(driver);
+            productPagePO = new ProductPO(driver);
         }
         return productPagePO;
     }
