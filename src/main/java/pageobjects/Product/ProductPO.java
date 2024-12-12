@@ -46,4 +46,8 @@ public class ProductPO {
     public void BackHomepage(){
         selenium.click(btnBackHomepage);
     }
+
+    public void allproduct(String prod){
+        hardAssert.assertElementDisplayed((WebElement) By.xpath("//div[.='"+prod+"']"));
+    }
 }

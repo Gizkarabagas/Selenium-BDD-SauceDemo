@@ -21,3 +21,17 @@ Feature: Product Homepage
     And user select "Sauce Labs Bolt T-Shirt"
     And user add to cart
     Then user verify QTY "2"
+
+  Scenario Outline: User want to verify all product
+    Given User is on the Login page
+    When User logs in using username "standard_user" and password "secret_sauce"
+    Then verify all product "<product>"
+
+    Examples:
+      | product                         |
+      | Sauce Labs Backpack             |
+      |Sauce Labs Bike Light            |
+      |Sauce Labs Bolt T-Shirt          |
+      |Sauce Labs Fleece Jacket         |
+      |Sauce Labs Onesie                |
+      |Test.allTheThings() T-Shirt (Red)|

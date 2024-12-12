@@ -1,5 +1,6 @@
 package stepdefinitions;
 
+import io.cucumber.datatable.DataTable;
 import io.cucumber.java.en.And;
 import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
@@ -8,6 +9,9 @@ import pageobjects.Product.ProductPO;
 import utilities.drivermanager.GetDriverManager;
 import utilities.pageobjectmanager.PageObjectManager;
 import utilities.config.PropertyFileReader;
+
+import java.util.List;
+import java.util.Map;
 
 public class ProductPageSteps {
     private WebDriver driver;
@@ -38,5 +42,10 @@ public class ProductPageSteps {
     @And("user back homepage")
     public void userBackHomepage() {
         productpage.BackHomepage();
+    }
+
+    @Then("verify all product {string}")
+    public void verifyAllProduct(String product) {
+        productpage.allproduct(product);
     }
 }
