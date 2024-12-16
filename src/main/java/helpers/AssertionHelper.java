@@ -95,6 +95,18 @@ public class AssertionHelper {
     }
 
     /**
+     * Asserts that a WebElement is not displayed on the page.
+     *
+     * @param locator the By locator or WebElement to check
+     */
+
+    public void assertElementNotDisplayed(Object locator){
+        WebElement element = resolveLocator(locator);
+        boolean isdiplayed = element.isDisplayed();
+        assertElementCondition(!isdiplayed, "element is not displayed");
+    }
+
+    /**
      * Asserts that a WebElement's text matches the expected value.
      *
      * @param locator the By locator or WebElement to check
@@ -104,6 +116,22 @@ public class AssertionHelper {
         WebElement element = getElement(locator);
         String actualText = getElementText(element);
         assertEquals(actualText, text, "Element text assertion");
+    }
+
+    /**
+     * Verify element is not displayed
+     *
+     * @param el WebElement object
+     * @return boolean
+     */
+    public Boolean isElementNotDisplayed(WebElement el) {
+        {
+            try {
+                return el.isDisplayed();
+            } catch (Exception e) {
+                return false;
+            }
+        }
     }
 
     /**

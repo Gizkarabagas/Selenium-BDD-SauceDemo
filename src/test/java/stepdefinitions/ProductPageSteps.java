@@ -5,6 +5,7 @@ import io.cucumber.java.en.And;
 import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
 import org.openqa.selenium.WebDriver;
+import org.testng.Assert;
 import pageobjects.Product.ProductPO;
 import utilities.drivermanager.GetDriverManager;
 import utilities.pageobjectmanager.PageObjectManager;
@@ -44,8 +45,34 @@ public class ProductPageSteps {
         productpage.BackHomepage();
     }
 
-    @Then("verify all product {string}")
-    public void verifyAllProduct(String product) {
-        productpage.allproduct(product);
+    @Then("verify all product")
+    public void verifyAllProduct(io.cucumber.datatable.DataTable dataTable) {
+        List<Map<String, String>> data = dataTable.asMaps(String.class, String.class);
+        for (Map<String, String> form : data) {
+            String product = form.get("Sauce Labs Backpack");
+            String product1 = form.get("Sauce Labs Bike Light");
+            String product2 = form.get("Sauce Labs Bolt T-Shirt");
+            String product3= form.get("Sauce Labs Fleece Jacket");
+            String product4 = form.get("Sauce Labs Onesie");
+            String product5 = form.get("Test.allTheThings() T-Shirt (Red)");
+
+            productpage.allproduct(("Sauce Labs Backpack"),product);
+            productpage.allproduct(("Sauce Labs Bike Light"), product1);
+            productpage.allproduct(("Sauce Labs Bolt T-Shirt"), product2);
+            productpage.allproduct(("Sauce Labs Fleece Jacket"), product3);
+            productpage.allproduct(("Sauce Labs Onesie"), product4);
+            productpage.allproduct(("Test.allTheThings() T-Shirt (Red)"), product5);
+
+        }
+    }
+
+    @Then("user remove cart")
+    public void userRemoveCart() {
+        productpage.removeCartProduct();
+    }
+
+    @Then("cart empty")
+    public void cartEmpty() {
+        Assert.assertTrue(productpage.cartEmpty());
     }
 }
