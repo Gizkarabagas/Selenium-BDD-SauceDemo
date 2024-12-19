@@ -8,11 +8,15 @@ import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.PageFactory;
 import utilities.config.PropertyFileReader;
+import helpers.DropDownHelper;
+
+import java.util.List;
 
 public class ProductPO {
     private AssertionHelper hardAssert;
     WebDriver driver;
     GeneralHelper selenium;
+    DropDownHelper dropDown;
     private static final PropertyFileReader config = new PropertyFileReader();
 
     @FindBy (xpath = "//button[@class='btn_primary btn_inventory']")
@@ -27,11 +31,21 @@ public class ProductPO {
     @FindBy (xpath = "//button[@class='inventory_details_back_button']")
     WebElement btnBackHomepage;
 
+    @FindBy (xpath = "//div[@class='inventory_item_name']")
+    List<WebElement> productName;
+
+    @FindBy (xpath = "//select[@class='product_sort_container']")
+    WebElement sortProductDropdown;
+
+    @FindBy (xpath = "//div[@class='inventory_item_price']")
+    WebElement priceProduct;
+
     public ProductPO(WebDriver driver) {
         PageFactory.initElements(driver, this);
         this.driver = driver;
         this.selenium = new GeneralHelper(driver);
         this.hardAssert = new AssertionHelper(driver);
+        this.dropDown = new DropDownHelper(driver);
     }
 
     /**
@@ -91,4 +105,22 @@ public class ProductPO {
         hardAssert.isElementNotDisplayed(QTYCart);
         return true;
     }
+
+    public void verifyAscendingProduct(){
+        hardAssert.assertElementsSortedAscending(productName);
+    }
+
+    public void clickOnNameList(String sortOption){
+        selenium.click(sortProductDropdown);
+        dropDown.selectByVisibleText(sortProductDropdown, sortOption);
+    }
+
+    public void verifyDescendingProduct(){
+        hardAssert.assertElementsSortedDescending(productName);
+    }
+
+    public void verifyDescendingPrice(){
+        hardAssert.assertElementsSortedAscending(priceProduct);
+    }
+
 }

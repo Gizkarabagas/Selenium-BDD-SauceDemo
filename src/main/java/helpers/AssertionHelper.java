@@ -12,6 +12,10 @@ import org.testng.Assert;
 import utilities.config.PropertyFileReader;
 
 import java.time.Duration;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+import java.util.stream.Collectors;
 
 public class AssertionHelper {
     private static final Logger logger = LogManager.getLogger(AssertionHelper.class);
@@ -134,6 +138,7 @@ public class AssertionHelper {
         }
     }
 
+
     /**
      * Asserts that a WebElement contains specific text.
      *
@@ -181,6 +186,92 @@ public class AssertionHelper {
     public void assertPageTitle(String expectedTitle) {
         String actualTitle = driver.getTitle();
         assertEquals(actualTitle, expectedTitle, "Page title assertion");
+    }
+
+    /**
+     * Verifies that the elements are sorted in ascending order.
+     *
+     * @param locator the By locator of the elements to check
+     */
+    public void assertElementsSortedAscending( Object locator) {
+        List<WebElement> elements = getElements(locator);
+        List<String> actualValues = elements.stream()
+                .map(WebElement::getText)
+                .map(String::trim)
+                .collect(Collectors.toList());
+
+        List<String> sortedValues = new ArrayList<>(actualValues);
+        Collections.sort(sortedValues);
+
+        assertEqualsList(actualValues, sortedValues, "Elements are not sorted in ascendingorder.");
+    }
+
+    /**
+     * Verifies that the elements are sorted in ascending order.
+     *
+     * @param locator the By locator of the elements to check
+     */
+    public void assertElementsSortedDescending( Object locator) {
+        List<WebElement> elements = getElements(locator);
+        List<String> actualValues = elements.stream()
+                .map(WebElement::getText)
+                .map(String::trim)
+                .collect(Collectors.toList());
+
+        List<String> sortedValues = new ArrayList<>(actualValues);
+        sortedValues.sort(Collections.reverseOrder());
+
+        assertEqualsList(actualValues, sortedValues, "Elements are not sorted in Descendingorder.");
+
+        }
+
+    public static void assertEqualsList(List<String> actualList, List<String> expectedList, String s) {
+        if (actualList == null || expectedList == null) {
+            throw new AssertionError("One or both lists are null. Actual: " + actualList + ", Expected: " + expectedList);
+        }
+
+        if (actualList.size() != expectedList.size()) {
+            throw new AssertionError("List sizes are different. Actual size: " + actualList.size() + ", Expected size: " + expectedList.size());
+        }
+
+        for (int i = 0; i < actualList.size(); i++) {
+            String actual = actualList.get(i);
+            String expected = expectedList.get(i);
+            if (!actual.equals(expected)) {
+                throw new AssertionError("List elements differ at index " + i + ". Actual: " + actual + ", Expected: " + expected);
+            }
+        }
+    }
+
+    /**
+     * Retrieves a list of WebElements for either a By locator or a list of WebElements.
+     *
+     * @param locatorOrElements the By locator or list of WebElements.
+     * @return a list of WebElements.
+     */
+    public List<WebElement> getElements(Object locatorOrElements) {
+        if (locatorOrElements instanceof By) {
+            // Handle By locator
+            By locator = (By) locatorOrElements;
+            try {
+                return wait.until(ExpectedConditions.visibilityOfAllElementsLocatedBy(locator));
+            } catch (Exception e) {
+                System.err.println("Error locating elements by By locator: " + locator);
+                e.printStackTrace();
+                return Collections.emptyList();
+            }
+        } else if (locatorOrElements instanceof List<?>) {
+            // Handle @FindBy WebElements
+            List<?> elements = (List<?>) locatorOrElements;
+            if (!elements.isEmpty() && elements.get(0) instanceof WebElement) {
+                return (List<WebElement>) elements;
+            } else {
+                System.err.println("Provided list is not a list of WebElements.");
+                return Collections.emptyList();
+            }
+        } else {
+            throw new IllegalArgumentException("Unsupported type. Provide a By locator or a List<WebElement>.");
+        }
     }
 
     /**

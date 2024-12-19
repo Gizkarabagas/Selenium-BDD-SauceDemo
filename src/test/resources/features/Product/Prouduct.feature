@@ -26,7 +26,7 @@ Feature: Product Homepage
       Given User is on the Login page
       When User logs in using username "standard_user" and password "secret_sauce"
       Then verify all product
-        | Sauce Labs Backpack             |
+        |Sauce Labs Backpack              |
         |Sauce Labs Bike Light            |
         |Sauce Labs Bolt T-Shirt          |
         |Sauce Labs Fleece Jacket         |
@@ -61,3 +61,26 @@ Feature: Product Homepage
       And user add to cart
       And user remove cart
       Then cart empty
+
+    Scenario: user verify list sorted product Ascending order
+      Given User is on the Login page
+      When User logs in using username "standard_user" and password "secret_sauce"
+      Then user verify product ascending order
+
+  Scenario: user verify list sorted product Descending order
+    Given User is on the Login page
+    When User logs in using username "standard_user" and password "secret_sauce"
+    And user click "Name (Z to A)"
+    Then user verify product descending order
+
+  Scenario: user verify by price list sorted product Ascending order
+    Given User is on the Login page
+    When User logs in using username "standard_user" and password "secret_sauce"
+    And user click "Price (low to high)"
+    Then user verify price product ascending order
+
+  Scenario: user verify by price list sorted product Descending order
+    Given User is on the Login page
+    When User logs in using username "standard_user" and password "secret_sauce"
+    And user click "Price (high to low)"
+    Then user verify price product descending order
