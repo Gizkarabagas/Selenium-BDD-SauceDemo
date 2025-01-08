@@ -45,4 +45,8 @@ public class LoginSteps {
     }
 
 
+    @Then("The Product page is displayed")
+    public void theProductPageIsDisplayed() {
+        loginPage.verifyLoginSuccessful();
+    }
 }

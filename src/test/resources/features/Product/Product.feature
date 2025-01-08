@@ -54,7 +54,7 @@ Feature: Product Homepage
       And verify all product
         | $29.99 |
 
-    Scenario: user want to remove cart form product detail
+    Scenario: user want to remove cart from product detail
       Given User is on the Login page
       When User logs in using username "standard_user" and password "secret_sauce"
       And user select "Sauce Labs Backpack"
@@ -77,10 +77,10 @@ Feature: Product Homepage
     Given User is on the Login page
     When User logs in using username "standard_user" and password "secret_sauce"
     And user click "Price (low to high)"
-    Then user verify price product ascending order
+    Then user verify price product in ascending order
 
   Scenario: user verify by price list sorted product Descending order
     Given User is on the Login page
     When User logs in using username "standard_user" and password "secret_sauce"
     And user click "Price (high to low)"
-    Then user verify price product descending order
+    Then user verify price product in descending order

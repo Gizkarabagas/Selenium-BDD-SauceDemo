@@ -1,4 +1,4 @@
-package pageobjects.Product;
+package pageobjects.product;
 
 import helpers.AssertionHelper;
 import helpers.GeneralHelper;
@@ -13,7 +13,7 @@ import helpers.DropDownHelper;
 import java.util.List;
 
 public class ProductPO {
-    private AssertionHelper hardAssert;
+    private final AssertionHelper hardAssert;
     WebDriver driver;
     GeneralHelper selenium;
     DropDownHelper dropDown;
@@ -36,9 +36,7 @@ public class ProductPO {
 
     @FindBy (xpath = "//select[@class='product_sort_container']")
     WebElement sortProductDropdown;
-
-    @FindBy (xpath = "//div[@class='inventory_item_price']")
-    WebElement priceProduct;
+    private By productPrice = By.className("inventory_item_price");
 
     public ProductPO(WebDriver driver) {
         PageFactory.initElements(driver, this);
@@ -107,7 +105,7 @@ public class ProductPO {
     }
 
     public void verifyAscendingProduct(){
-        hardAssert.assertElementsSortedAscending(productName);
+        hardAssert.assertElementsTextSortedAscending(productName);
     }
 
     public void clickOnNameList(String sortOption){
@@ -116,11 +114,13 @@ public class ProductPO {
     }
 
     public void verifyDescendingProduct(){
-        hardAssert.assertElementsSortedDescending(productName);
+        hardAssert.assertElementsTextSortedDescending(productName);
     }
 
     public void verifyDescendingPrice(){
-        hardAssert.assertElementsSortedAscending(priceProduct);
+        hardAssert.assertElementsSortedDescendingByDoubleValue(productPrice);
     }
-
+    public void verifyAscendingPrice(){
+        hardAssert.assertElementsSortedAscendingByDoubleValue(productPrice);
+    }
 }

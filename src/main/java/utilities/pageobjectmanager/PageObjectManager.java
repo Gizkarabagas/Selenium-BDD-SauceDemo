@@ -2,7 +2,7 @@ package utilities.pageobjectmanager;
 
 import org.openqa.selenium.WebDriver;
 import pageobjects.login.LoginPO;
-import pageobjects.Product.ProductPO;
+import pageobjects.product.ProductPO;
 
 public class PageObjectManager {
     private final WebDriver driver;

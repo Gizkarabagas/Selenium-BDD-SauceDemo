@@ -1,12 +1,11 @@
 package stepdefinitions;
 
-import io.cucumber.datatable.DataTable;
 import io.cucumber.java.en.And;
 import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
 import org.openqa.selenium.WebDriver;
 import org.testng.Assert;
-import pageobjects.Product.ProductPO;
+import pageobjects.product.ProductPO;
 import utilities.drivermanager.GetDriverManager;
 import utilities.pageobjectmanager.PageObjectManager;
 import utilities.config.PropertyFileReader;
@@ -86,7 +85,6 @@ public class ProductPageSteps {
     @And("user click {string}")
     public void userClick(String NameList) {
         productpage.clickOnNameList(NameList);
-
     }
 
     @Then("user verify product descending order")
@@ -94,13 +92,14 @@ public class ProductPageSteps {
         productpage.verifyDescendingProduct();
     }
 
-    @Then("user verify price product ascending order")
-    public void userVerifyPriceProductAscendingOrder() {
+
+    @Then("user verify price product in ascending order")
+    public void userVerifyPriceProductInAscendingOrder() {
+        productpage.verifyAscendingPrice();
+    }
+
+    @Then("user verify price product in descending order")
+    public void userVerifyPriceProductInDescendingOrder() {
         productpage.verifyDescendingPrice();
     }
-
-    @Then("user verify price product descending order")
-    public void userVerifyPriceProductDescendingOrder() {
-    }
-
 }

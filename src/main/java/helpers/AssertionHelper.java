@@ -193,7 +193,7 @@ public class AssertionHelper {
      *
      * @param locator the By locator of the elements to check
      */
-    public void assertElementsSortedAscending( Object locator) {
+    public void assertElementsTextSortedAscending(Object locator) {
         List<WebElement> elements = getElements(locator);
         List<String> actualValues = elements.stream()
                 .map(WebElement::getText)
@@ -203,7 +203,7 @@ public class AssertionHelper {
         List<String> sortedValues = new ArrayList<>(actualValues);
         Collections.sort(sortedValues);
 
-        assertEqualsList(actualValues, sortedValues, "Elements are not sorted in ascendingorder.");
+        assertEqualsListString(actualValues, sortedValues, "Elements are not sorted in ascendingorder.");
     }
 
     /**
@@ -211,7 +211,7 @@ public class AssertionHelper {
      *
      * @param locator the By locator of the elements to check
      */
-    public void assertElementsSortedDescending( Object locator) {
+    public void assertElementsTextSortedDescending(Object locator) {
         List<WebElement> elements = getElements(locator);
         List<String> actualValues = elements.stream()
                 .map(WebElement::getText)
@@ -221,11 +221,11 @@ public class AssertionHelper {
         List<String> sortedValues = new ArrayList<>(actualValues);
         sortedValues.sort(Collections.reverseOrder());
 
-        assertEqualsList(actualValues, sortedValues, "Elements are not sorted in Descendingorder.");
+        assertEqualsListString(actualValues, sortedValues, "Elements are not sorted in Descendingorder.");
 
         }
 
-    public static void assertEqualsList(List<String> actualList, List<String> expectedList, String s) {
+    public static void assertEqualsListString(List<String> actualList, List<String> expectedList, String s) {
         if (actualList == null || expectedList == null) {
             throw new AssertionError("One or both lists are null. Actual: " + actualList + ", Expected: " + expectedList);
         }
@@ -242,6 +242,26 @@ public class AssertionHelper {
             }
         }
     }
+    public static void assertEqualsListDouble(List<Double> actualList, List<Double> expectedList, String message) {
+        if (actualList == null || expectedList == null) {
+            throw new AssertionError("One or both lists are null. Actual: " + actualList + ", Expected: " + expectedList);
+        }
+
+        if (actualList.size() != expectedList.size()) {
+            throw new AssertionError("List sizes are different. Actual size: " + actualList.size() + ", Expected size: " + expectedList.size());
+        }
+
+        for (int i = 0; i < actualList.size(); i++) {
+            Double actual = actualList.get(i);
+            Double expected = expectedList.get(i);
+            if (!actual.equals(expected)) {
+                throw new AssertionError("List elements differ at index " + i + ". Actual: " + actual + ", Expected: " + expected);
+            }
+        }
+
+        System.out.println(message + ": Assertion passed.");
+    }
+
 
     /**
      * Retrieves a list of WebElements for either a By locator or a list of WebElements.
@@ -374,4 +394,69 @@ public class AssertionHelper {
             throw new RuntimeException("Unable to retrieve text from the element. " + e.getMessage(), e);
         }
     }
+    /**
+     * Verifies that the elements are sorted in ascending order based on numerical values.
+     *
+     * @param locator the locator of the elements to check
+     */
+    public void assertElementsSortedAscendingByDoubleValue(Object locator) {
+        List<WebElement> elements = getElementList(locator);
+        List<Double> actualValues = elements.stream()
+                .map(WebElement::getText)
+                .map(String::trim)
+                .map(text -> text.replaceAll("[^0-9.]", ""))
+                .map(Double::parseDouble)
+                .collect(Collectors.toList());
+
+        List<Double> sortedValues = new ArrayList<>(actualValues);
+        Collections.sort(sortedValues);
+
+        assertEqualsListDouble(actualValues, sortedValues, "Elements are not sorted in ascending order by value.");
+    }
+    /**
+     * Verifies that the elements are sorted in descending order based on numerical values.
+     *
+     * @param locator the locator of the elements to check
+     */
+    public void assertElementsSortedDescendingByDoubleValue(Object locator) {
+        List<WebElement> elements = getElementList(locator);
+        List<Double> actualValues = elements.stream()
+                .map(WebElement::getText)
+                .map(String::trim)
+                .map(text -> text.replaceAll("[^0-9.]", ""))
+                .map(Double::parseDouble)
+                .collect(Collectors.toList());
+
+        List<Double> sortedValues = new ArrayList<>(actualValues);
+        sortedValues.sort(Collections.reverseOrder());
+
+        assertEqualsListDouble(actualValues, sortedValues, "Elements are not sorted in descending order by value.");
+    }
+
+    private List<WebElement> resolveLocatorAsList(Object locator) {
+        if (locator instanceof By) {
+            return driver.findElements((By) locator);
+        } else if (locator instanceof WebElement) {
+            return ((WebElement) locator).findElements(By.xpath(".//*"));
+        } else {
+            logger.error("Invalid locator type provided for getElements.");
+            throw new IllegalArgumentException("Locator must be of type By or WebElement.");
+        }
+    }
+    public List<WebElement> getElementList(Object locator) {
+        logger.debug("Waiting for visibility of all elements for locator: {}", locator);
+        try {
+            List<WebElement> elements = resolveLocatorAsList(locator);
+            List<WebElement> visibleElements = wait.until(ExpectedConditions.visibilityOfAllElements(elements));
+            logger.debug("All elements are now visible: {}", visibleElements);
+            return visibleElements;
+        } catch (NoSuchElementException e) {
+            logger.error("Elements not found for locator: {}. Exception: {}", locator, e.getMessage());
+            throw e;
+        } catch (Exception e) {
+            logger.error("Error while waiting for visibility of all elements for locator: {}. Exception: {}", locator, e.getMessage());
+            throw e;
+        }
+    }
+
 }
