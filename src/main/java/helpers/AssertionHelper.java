@@ -42,7 +42,7 @@ public class AssertionHelper {
      * @param expected the expected string value
      * @param message  optional custom message for logging
      */
-    public static void assertEquals(String actual, String expected, String... message) {
+    public void assertEqualsString(String actual, String expected, String... message) {
         String logMessage = message.length > 0 ? message[0] : "String values do not match.";
         try {
             Assert.assertEquals(actual, expected, "Assertion Failed: " + logMessage);
@@ -60,7 +60,7 @@ public class AssertionHelper {
      * @param expected the expected integer value
      * @param message  optional custom message for logging
      */
-    public static void assertEquals(int actual, int expected, String... message) {
+    public void assertEqualsInt(int actual, int expected, String... message) {
         String logMessage = message.length > 0 ? message[0] : "Integer values do not match.";
         try {
             Assert.assertEquals(actual, expected, "Assertion Failed: " + logMessage);
@@ -119,7 +119,7 @@ public class AssertionHelper {
     public void assertElementText(Object locator, String text) {
         WebElement element = getElement(locator);
         String actualText = getElementText(element);
-        assertEquals(actualText, text, "Element text assertion");
+        assertEqualsString(actualText, text, "Element text assertion");
     }
 
     /**
@@ -185,7 +185,7 @@ public class AssertionHelper {
      */
     public void assertPageTitle(String expectedTitle) {
         String actualTitle = driver.getTitle();
-        assertEquals(actualTitle, expectedTitle, "Page title assertion");
+        assertEqualsString(actualTitle, expectedTitle, "Page title assertion");
     }
 
     /**
@@ -203,7 +203,7 @@ public class AssertionHelper {
         List<String> sortedValues = new ArrayList<>(actualValues);
         Collections.sort(sortedValues);
 
-        assertEqualsListString(actualValues, sortedValues, "Elements are not sorted in ascendingorder.");
+        assertEqualsListString(actualValues, sortedValues, "Elements are not sorted in ascending order.");
     }
 
     /**
@@ -223,9 +223,9 @@ public class AssertionHelper {
 
         assertEqualsListString(actualValues, sortedValues, "Elements are not sorted in Descendingorder.");
 
-        }
+    }
 
-    public static void assertEqualsListString(List<String> actualList, List<String> expectedList, String s) {
+    public void assertEqualsListString(List<String> actualList, List<String> expectedList, String s) {
         if (actualList == null || expectedList == null) {
             throw new AssertionError("One or both lists are null. Actual: " + actualList + ", Expected: " + expectedList);
         }
@@ -242,7 +242,7 @@ public class AssertionHelper {
             }
         }
     }
-    public static void assertEqualsListDouble(List<Double> actualList, List<Double> expectedList, String message) {
+    public void assertEqualsListDouble(List<Double> actualList, List<Double> expectedList, String message) {
         if (actualList == null || expectedList == null) {
             throw new AssertionError("One or both lists are null. Actual: " + actualList + ", Expected: " + expectedList);
         }
@@ -301,7 +301,7 @@ public class AssertionHelper {
      */
     public void assertCurrentUrl(String expectedUrl) {
         String actualUrl = driver.getCurrentUrl();
-        assertEquals(actualUrl, expectedUrl, "Current URL assertion");
+        assertEqualsString(actualUrl, expectedUrl, "Current URL assertion");
     }
 
     /**
@@ -458,5 +458,38 @@ public class AssertionHelper {
             throw e;
         }
     }
-
+    /**
+     * Asserts that a condition is true.
+     *
+     * @param condition the condition to evaluate
+     * @param message   the message to display if the assertion fails
+     */
+    public void assertTrue(boolean condition, String message) {
+        Assert.assertTrue(condition, message);
+        logger.info("Assertion passed: {}", message);
+    }
+    /**
+     * Asserts that the specified element is disabled.
+     *
+     * @param locator the WebElement to check
+     */
+    public void assertElementIsDisabled(Object locator) {
+        WebElement element = getElement(locator);
+        boolean isDisabled = element.getAttribute("disabled") != null || !element.isEnabled();
+        Assert.assertTrue(isDisabled);
+        logger.info("Assertion passed: Element is disabled as expected.");
+    }
+    /**
+     * Asserts that the given object is not null.
+     *
+     * @param object the object to check
+     */
+    public void assertNotNull(Object object) {
+        if (object == null) {
+            logger.error(object + " is null");
+        } else {
+            logger.info(object + "are not null");
+        }
+        Assert.assertNotNull(object);
+    }
 }
